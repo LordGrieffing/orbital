@@ -1,8 +1,6 @@
 import math
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation 
-import mpl_toolkits.mplot3d.axes3d as p3
-
+from matplotlib.animation import FuncAnimation
 
 
 def main():
@@ -20,9 +18,6 @@ def main():
 
     # Lists to store position data for plotting
     x_vals, y_vals, z_vals = [], [], []
-
-    # Define number of steps
-    num_steps = 50000
     
     
     # Sattelite Starting position vecotr
@@ -35,7 +30,7 @@ def main():
     
     # Calculate the orbit of the sattelite
 
-    for i in range(num_steps):
+    for i in range(50000):
 
         # Store current position for visualization
         x_vals.append(Pos[0])
@@ -61,50 +56,24 @@ def main():
         for j in range(3):
             Vel[j] = Vel[j] + (a * unitV[j])
 
-    
+    # Plot the orbit
     fig = plt.figure()
-    axis = p3.Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
 
-    axis.set_xlim3d(min(x_vals), max(x_vals))
-    axis.set_ylim3d(min(y_vals), max(y_vals))
-    axis.set_zlim3d(min(y_vals), max(y_vals))
+    def animate(i):
+        ax.clear()
+        # Plot satellite trajectory
+        ax.plot(x_vals[i], y_vals[i], z_vals[i], label="Satellite Orbit", color="blue")
 
-    animated_plot, = axis.plot([], [], [])
-    
-    def update_frame(frame):
-        
-        axis.scatter(0, 0, 0, color="red", s=200, label="Earth")
+        # Plot Earth (as a point)
+        ax.scatter(0, 0, 0, color="red", s=100, label="Earth")
 
-        # Set orbit data
-        animated_plot.set_data(x_vals[:frame], y_vals[:frame])
-        animated_plot.set_3d_properties(z_vals[:frame])
-        
-        return animated_plot, 
+        # Labels and legend
+        ax.set_xlabel("X Position (m)")
+        ax.set_ylabel("Y Position (m)")
+        ax.set_zlabel("Z Position (m)")
+        ax.legend()
 
 
-
-
-
-    animation = FuncAnimation(
-        
-                fig = fig,
-                func= update_frame,
-                frames= num_steps,
-                interval=25,
-                )
-
-
-
-
-
-
-
-
-
-
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    main()
+    ani = FuncAnimation(fig, animate, frames=50000, interval=500, repeat=True)
+    plt.close()
