@@ -23,12 +23,15 @@ def main():
 
     # Define number of steps
     num_steps = 50000
+
+    # Define change in time. Higher numbers run faster but less accurate
+    dt = 30
     
     
     # Sattelite Starting position vecotr
-    Pos = [8377992.206, 0, 0]
+    Pos = [coreDist + surfaceDist, 0, 0]
     # Sattelite Starting velocity vector
-    Vel = [0, 6800 , 0]
+    Vel = [0, 7210 , 0]
 
     # Unit vector temp variable
     unitV = [0,0,0]
@@ -55,15 +58,18 @@ def main():
 
         # Calculate New Position vector
         for j in range(3):
-            Pos[j] = Pos[j] + Vel[j]
+            Pos[j] = Pos[j] + Vel[j] * dt
 
         # Calculate New Velocity vector
         for j in range(3):
-            Vel[j] = Vel[j] + (a * unitV[j])
+            Vel[j] = Vel[j] + (a * unitV[j]) * dt
 
     
     fig = plt.figure()
-    axis = p3.Axes3D(fig)
+    axis = fig.add_subplot(111, projection='3d')
+
+    # Generate Earth
+    axis.scatter(0, 0, 0, color="red", s=200, label="Earth")
 
     axis.set_xlim3d(min(x_vals), max(x_vals))
     axis.set_ylim3d(min(y_vals), max(y_vals))
@@ -71,12 +77,13 @@ def main():
 
     animated_plot, = axis.plot([], [], [])
     
+    # Frame updating function
     def update_frame(frame):
-        
-        axis.scatter(0, 0, 0, color="red", s=200, label="Earth")
 
         # Set orbit data
+        # Define the x, y values
         animated_plot.set_data(x_vals[:frame], y_vals[:frame])
+        # Define the z values
         animated_plot.set_3d_properties(z_vals[:frame])
         
         return animated_plot, 
@@ -84,27 +91,18 @@ def main():
 
 
 
-
-    animation = FuncAnimation(
+    # Animate the graph
+    ani = animation = FuncAnimation(
         
                 fig = fig,
                 func= update_frame,
                 frames= num_steps,
-                interval=25,
+                interval=2,
                 )
 
-
-
-
-
-
-
-
-
-
-
+    
+    #ani.save("satelitte_animation.gif")
     plt.show()
-
 
 if __name__ == "__main__":
     main()
