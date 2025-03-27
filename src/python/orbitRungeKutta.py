@@ -41,7 +41,7 @@ def main():
     dt = 1
     
     
-    # Sattelite Starting position vecotr
+    # Sattelite Starting position vector
     Pos = np.array([coreDist + surfaceDist, 0, 0], dtype=np.float64)
     # Sattelite Starting velocity vector
     Vel = np.array([0, 7210 , 0], dtype=np.float64)
@@ -74,16 +74,15 @@ def main():
         kPos[2] = Vel * 0.5 * kVel[1] * dt
 
         # Calculate k4
-        kVel[3] =  accelerate(Pos + 0.5 * kPos[2], G, mE) * dt
+        kVel[3] =  accelerate(Pos + kPos[2], G, mE) * dt
         kPos[3] = Vel * kVel[2] * dt
 
         # Update the positions of the orbit
         Vel = Vel + (dt /6) * (kVel[0] + 2*kVel[1] + 2*kVel[2] + kVel[3])
         Pos = Pos + (dt /6) * (kPos[0] + 2*kPos[1] + 2*kPos[2] + kPos[3])
 
-        print(f"t: {i} Position: {Pos} Velocity: {Vel}")
 
-    '''
+    
     fig = plt.figure()
     axis = fig.add_subplot(111, projection='3d')
 
@@ -115,14 +114,13 @@ def main():
         
                 fig = fig,
                 func= update_frame,
-                frames= num_steps//10,
+                frames= num_steps,
                 interval=2,
                 )
 
     
     #ani.save("satelitte_animation.gif")
     plt.show()
-    '''
 
 if __name__ == "__main__":
     main()
