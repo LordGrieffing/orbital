@@ -1,6 +1,6 @@
 import math
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation 
+from matplotlib.animation import FuncAnimation, PillowWriter
 import mpl_toolkits.mplot3d.axes3d as p3
 import numpy as np
 
@@ -113,7 +113,7 @@ def main():
 
 
     # Animate the graph
-    ani = animation = FuncAnimation(
+    ani= FuncAnimation(
         
                 fig = fig,
                 func= update_frame,
@@ -122,7 +122,12 @@ def main():
                 )
 
     
-    #ani.save("satelitte_animation.gif")
+    # Save satelitte_animation
+    writer = PillowWriter(fps=15,
+                                 metadata=dict(artist='Me'),
+                                 bitrate=1800)
+    ani.save("satelitte_animation_euler.gif", writer=writer)
+    
     plt.show()
 
 
