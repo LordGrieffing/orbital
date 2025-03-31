@@ -36,7 +36,7 @@ def main():
     x_vals, y_vals, z_vals = [], [], []
 
     # Define number of steps
-    num_steps = 100
+    num_steps = 50000
 
     # Define change in time. Higher numbers run faster but less accurate
     dt = 30
@@ -68,21 +68,21 @@ def main():
 
         # Calculate k2
         kVel[1] =  accelerate(Pos + (0.5 * kPos[0])*dt, G, mE)
-        kPos[1] = Vel * 0.5 * kVel[0] * dt
+        kPos[1] = Vel + 0.5 * kVel[0] * dt
 
         # Calculate k3
         kVel[2] =  accelerate(Pos + (0.5 * kPos[1])*dt, G, mE)
-        kPos[2] = Vel * 0.5 * kVel[1] * dt
+        kPos[2] = Vel + 0.5 * kVel[1] * dt
 
         # Calculate k4
         kVel[3] =  accelerate(Pos + (kPos[2])*dt, G, mE)
-        kPos[3] = Vel * kVel[2] * dt
+        kPos[3] = Vel + kVel[2] * dt
 
         # Update the positions of the orbit
         Vel = Vel + (dt /6) * (kVel[0] + 2*kVel[1] + 2*kVel[2] + kVel[3])
         Pos = Pos + (dt /6) * (kPos[0] + 2*kPos[1] + 2*kPos[2] + kPos[3])
 
-        print(f"t: {i} Position: {Pos} Velocity: {Vel}")
+        #print(f"t: {i} Position: {Pos} Velocity: {Vel}")
 
 
    
