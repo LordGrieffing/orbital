@@ -97,6 +97,8 @@ class massObject:
         kVel[3] = self.accelerate(otherObject, (kPos[2]*dt))
         kPos[3] = self.velocity + kVel[2]*dt
 
+        return kVel, kPos
+
     # update position and velocity
     def posVelUpdate(self, kVel, kPos, dt):
         

@@ -37,6 +37,10 @@ def main():
     earthPath = []
     satellitePath = []
 
+    # k constants for RungaKutta calculation
+    earthK = np.zeros((2,4,3))
+    satelliteK = np.zeros((2,4,3))
+
     # steps
     num_steps = 1000
 
@@ -51,7 +55,12 @@ def main():
         satellitePath.append(satellite.position)
 
         # Calculate k constants
-        
+        earthK[0], earthK[1] = earth.kUpdate(satellite, dt)
+        satelliteK[0], satelliteK[1] = satellite.kUpdate(earth, dt)
+
+        # Update position and velocity of objects
+        earth.posVelUpdate(earthK[0], earthK[1], dt)
+        satellite.posVelUpdate(satelliteK[0], satelliteK[1], dt)
 
 
 
