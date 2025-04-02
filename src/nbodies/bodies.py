@@ -61,7 +61,8 @@ class massObject:
         # if an offset was provided use this for position
 
         # Unit vector of position
-        unitV = (otherObject.position - self.position) / MagPos
+        #unitV = (otherObject.position - self.position) / MagPos
+        unitV = (self.position - otherObject.position) / MagPos
 
         # Calculate acceleration due to gravity
         a = -(self.G * otherObject.mass) / (MagPos**2)

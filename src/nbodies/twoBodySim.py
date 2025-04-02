@@ -38,8 +38,10 @@ def main():
     satellitePath = []
 
     # k constants for RungaKutta calculation
-    earthK = np.zeros((2,4,3))
-    satelliteK = np.zeros((2,4,3))
+    earthKVel = np.zeros((4,3))
+    earthKPos = np.zeros((4,3))
+    satelliteKVel = np.zeros((4,3))
+    satelliteKPos = np.zeros((4,3))
 
     # steps
     num_steps = 1000
@@ -54,15 +56,44 @@ def main():
         earthPath.append(earth.position)
         satellitePath.append(satellite.position)
 
+        #print(satellitePath[i])
+
         # Calculate k constants
-        earthK[0], earthK[1] = earth.kUpdate(satellite, dt)
-        satelliteK[0], satelliteK[1] = satellite.kUpdate(earth, dt)
+        earthKVel, earthKPos = earth.kUpdate(satellite, dt)
+        satelliteKVel, satelliteKPos = satellite.kUpdate(earth, dt)
 
         # Update position and velocity of objects
-        earth.posVelUpdate(earthK[0], earthK[1], dt)
-        satellite.posVelUpdate(satelliteK[0], satelliteK[1], dt)
+        earth.posVelUpdate(earthKVel, earthKPos, dt)
+        satellite.posVelUpdate(satelliteKVel, satelliteKPos, dt)
+
+    # Convert lists to arrays for plotting
+    earthPath = np.array(earthPath)
+    satellitePath = np.array(satellitePath)
+
+    # Generate graph to show the orbits
+    fig = plt.figure()
+    axis = fig.add_subplot(111, projection='3d')
+
+    # Scatter plot for Earth and Satellite
+    earth_sc = axis.scatter([], [], [], color='blue', label="Earth")
+    sat_sc = axis.scatter([], [], [], color='red', label="Satellite")
+
+    axis.set_xlim3d(-15000000, 15000000)
+    axis.set_ylim3d(-15000000, 15000000)
+    axis.set_zlim3d(-15000000, 15000000)
 
 
+    # Animation update function
+    def update(frame, sat_sc, earth_sc, satellitePath, earthPath):
+        sat_sc._offsets3d = (satellitePath[:frame, 0], satellitePath[:frame, 1], satellitePath[:frame, 2])
+        earth_sc._offsets3d = (earthPath[:frame, 0], earthPath[:frame, 1], earthPath[:frame, 2])
+        return sat_sc, earth_sc
+
+    # Run animation
+    ani = FuncAnimation(fig, update, frames=num_steps, fargs=(sat_sc, earth_sc, satellitePath, earthPath), interval=30)
+
+    plt.legend()
+    plt.show()
 
 
 
