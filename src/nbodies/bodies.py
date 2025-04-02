@@ -72,6 +72,33 @@ class massObject:
 
         return a * unitV
     
+    # Test function to see if three or more bodies can work
+    def accelerateN(self, objects, offset = None):
+
+        temp_pos = self.position
+
+        if offset is not None:
+            self.setPosition(self.position + offset)
+
+        total_acc = np.array([0.0,0.0,0.0], dtype=np.float64)
+
+        for other in objects:
+            if other is not self:
+                r_vec = self.position - other.position
+                r_mag = np.linalg.norm(r_vec)
+
+                if r_mag == 0:
+                    continue
+
+                unitV = r_vec / r_mag
+                a = -(self.G * other.mass) / (r_mag**2)
+
+                total_acc += a * unitV
+
+        self.setPosition(temp_pos)
+
+        return total_acc
+    
     # Distance between two objects
     def distance(self, otherObject):
         diff = self.position - otherObject.position
@@ -83,19 +110,19 @@ class massObject:
         kVel = np.zeros((4, 3))
 
         # k1
-        kVel[0] = self.accelerate(otherObject)
+        kVel[0] = self.accelerateN(otherObject)
         kPos[0] = self.velocity
 
         # k2
-        kVel[1] = self.accelerate(otherObject, (kPos[0]*0.5*dt))
+        kVel[1] = self.accelerateN(otherObject, (kPos[0]*0.5*dt))
         kPos[1] = self.velocity + 0.5*kVel[0]*dt
 
         # k3
-        kVel[2] = self.accelerate(otherObject, (kPos[1]*0.5*dt))
+        kVel[2] = self.accelerateN(otherObject, (kPos[1]*0.5*dt))
         kPos[2] = self.velocity + 0.5*kVel[1]*dt
 
         # k4
-        kVel[3] = self.accelerate(otherObject, (kPos[2]*dt))
+        kVel[3] = self.accelerateN(otherObject, (kPos[2]*dt))
         kPos[3] = self.velocity + kVel[2]*dt
 
         return kVel, kPos

@@ -43,6 +43,9 @@ def main():
     object2KVel = np.zeros((4,3))
     object2KPos = np.zeros((4,3))
 
+    # Object list
+    objects = [object1, object2]
+
     # steps
     num_steps = 3000
 
@@ -59,8 +62,8 @@ def main():
         #print(object2Path[i])
 
         # Calculate k constants
-        object1KVel, object1KPos = object1.kUpdate(object2, dt)
-        object2KVel, object2KPos = object2.kUpdate(object1, dt)
+        object1KVel, object1KPos = object1.kUpdate(objects, dt)
+        object2KVel, object2KPos = object2.kUpdate(objects, dt)
 
         # Update position and velocity of objects
         object1.posVelUpdate(object1KVel, object1KPos, dt)

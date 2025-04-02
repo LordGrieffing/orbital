@@ -43,6 +43,9 @@ def main():
     satelliteKVel = np.zeros((4,3))
     satelliteKPos = np.zeros((4,3))
 
+    # Object list
+    objects = [earth, satellite]
+
     # steps
     num_steps = 1000
 
@@ -59,8 +62,8 @@ def main():
         #print(satellitePath[i])
 
         # Calculate k constants
-        earthKVel, earthKPos = earth.kUpdate(satellite, dt)
-        satelliteKVel, satelliteKPos = satellite.kUpdate(earth, dt)
+        earthKVel, earthKPos = earth.kUpdate(objects, dt)
+        satelliteKVel, satelliteKPos = satellite.kUpdate(objects, dt)
 
         # Update position and velocity of objects
         earth.posVelUpdate(earthKVel, earthKPos, dt)
@@ -91,6 +94,7 @@ def main():
 
     # Run animation
     ani = FuncAnimation(fig, update, frames=num_steps, fargs=(sat_sc, earth_sc, satellitePath, earthPath), interval=30)
+    
 
     plt.legend()
     plt.show()
