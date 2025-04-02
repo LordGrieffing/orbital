@@ -3,10 +3,10 @@ We can calculate orbits and motions of objects through space using simple differ
 In this repository I solve these equations in discret steps. This allows me to simulate different
 oribatl paths between different objects.
 
-# Euler vs Rungakutta
+# Euler vs Rungekutta
 Euler's original method of solving these equations creates unstable orbits. We essentially get the
-effect of gravity adding more acceleration than it should. The RungaKutta method allows us to 
+effect of gravity adding more acceleration than it should. The RungeKutta method allows us to 
 average steps together and get a more accurate and smoother orbit. We can see this effect in these
-two figures. The one on the left is using Euler's method the one on the right is using RungaKutta.
+two figures. The one on the left is using Euler's method the one on the right is using RungeKutta.
 
-![alt text]()
+![alt text](https://github.com/LordGrieffing/orbital/blob/main/src/figures/satelitte_euler.gif) ![alt text](https://github.com/LordGrieffing/orbital/blob/main/src/figures/satelitte_RungeKutta.gif)
