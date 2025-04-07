@@ -30,3 +30,11 @@ motion that we see with just two bodies but also most system end up ejecting the
 <p>
     <img src="https://github.com/LordGrieffing/orbital/blob/main/src/figures/three_body_mayhem.gif">
 </p>
+
+However even though there is no general solution for these dynamic systems as a whole. There are a number
+of three body systems that, given the correct intial velocities and positions do have a "stable" existance.
+Here is an example of what one these stable three body systems look.
+
+<p>
+    <img src="https://github.com/LordGrieffing/orbital/blob/main/src/figures/three_body_corkscrew.gif">
+</p>
