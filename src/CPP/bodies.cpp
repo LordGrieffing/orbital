@@ -11,6 +11,9 @@ class massObject{
         std::array<double, 3> velocity;
         double objectRadius;
 
+        // Gravtiational Constant
+        double G = 6.674 * pow(10, 11);
+
 
         // Constructor
         massObject(double m, const std::array<double, 3>& p, const std::array<double, 3>& v, double r)
@@ -27,7 +30,9 @@ std::array<double, 3> massObject::accelerate(const std::vector<massObject*> obje
     std::array<double, 3> temp_pos = position;
     std::array<double, 3> total_acc = {0, 0, 0};
     std::array<double, 3> r_vec;
+    std::array<double, 3> unitV;
     double r_mag;
+    double a;
 
 
     // Check if offset is zero, if not add the offset to the position of the object 
@@ -42,12 +47,35 @@ std::array<double, 3> massObject::accelerate(const std::vector<massObject*> obje
 
         // Check to make sure we are not looking at this object
         if(!(objects[i] == this)){
-
+            
+            // get the difference vector
             for(int j = 0; j < 3; j++){
                 r_vec[j] = position[j] - objects[i]->position[j];
             }
 
+            // get the magnitude of that difference
+            r_mag = magnitude(r_vec);
+
+            // construct the unit vector
+            for(int j = 0; j < 3; j++){
+                unitV[j] = r_vec[j] / r_mag;
+            }
+
+            // Calculate acceleration from this current object
+            a = -(G * objects[i]->mass) / pow(r_mag, 2);
+
+            // Add this acceleration to the total acceleration on the object
+            for(int j = 0; j < 3; j++){
+                total_acc[j] = total_acc[j] + (a * unitV[j]);
+            }
         }
+        // Reset the original position of the object
+        for(int j = 0; j < 3; j++){
+            position[j] = temp_pos[j];
+        }
+
+        // Return the total acceleration happening to the object
+        return total_acc;
     }
 
 
@@ -60,5 +88,5 @@ bool isOffsetZero(const std::array<double,3> offset){
 
 // Finds the magnitude of an array
 double magnitude(const std::array<double, 3>& vec){
-    return 
+    return sqrt(pow(vec[0], 2) + pow(vec[1], 2) + pow(vec[2], 2));
 }
