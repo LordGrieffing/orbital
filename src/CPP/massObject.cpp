@@ -2,32 +2,14 @@
 #include <vector>
 #include <cmath>
 #include <tuple>
+#include "massObject.h"
 
-class massObject{
-    public:
+// Constructor
+massObject::massObject(double m, const std::array<double, 3>& p, const std::array<double, 3>& v, double r)
+    : mass(m), position(p), velocity(v), objectRadius(r){};
 
-        // public attributes
-        double mass;
-        std::array<double, 3> position;
-        std::array<double, 3> velocity;
-        double objectRadius;
-
-        // Gravtiational Constant
-        double G = 6.674 * pow(10, 11);
-
-
-        // Constructor
-        massObject(double m, const std::array<double, 3>& p, const std::array<double, 3>& v, double r)
-            : mass(m), position(p), velocity(p), objectRadius(r){}
-
-        // public function declartion
-        std::array<double, 3> accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset = {0,0,0}, bool RK = false);
-        std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3>,4>> kUpdate(const std::vector<massObject*> objects, int dt);
-        void posVelUpdate(const std::array<std::array<double, 3>,4>& kVel, const std::array<std::array<double, 3>,4>& kPos, int dt);
-        
-};
 // Function in charge of calculating acceleration done to an object
-std::array<double, 3> massObject::accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset = {0,0,0}, bool RK = false){
+std::array<double, 3> massObject::accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset, bool RK = false){
     
     // Declare temp variables that function uses
     std::array<double, 3> temp_pos = position;
