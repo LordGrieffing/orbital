@@ -23,6 +23,7 @@ class massObject{
         // public function declartion
         std::array<double, 3> accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset = {0,0,0}, bool RK = false);
         std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3>,4>> kUpdate(const std::vector<massObject*> objects, int dt);
+        void posVelUpdate(const std::array<std::array<double, 3>,4>& kVel, const std::array<std::array<double, 3>,4>& kPos, int dt);
         
 };
 // Function in charge of calculating acceleration done to an object
@@ -88,7 +89,6 @@ std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3
     // Intialize the k constant variables
     std::array<std::array<double, 3>,4> kPos;
     std::array<std::array<double, 3>,4> kVel;
-    std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3>,4>> kContstants;
 
     // k1
     kVel[0] = accelerate(objects);
@@ -103,12 +103,29 @@ std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3
     kPos[2] = addArray(velocity, arrayScale(kVel[1], (0.5*dt)));
 
     // k4
-    kVel[2] = accelerate(objects, arrayScale(kPos[2], dt));
-    kPos[2] = addArray(velocity, arrayScale(kVel[2], dt));
+    kVel[3] = accelerate(objects, arrayScale(kPos[2], dt));
+    kPos[3] = addArray(velocity, arrayScale(kVel[2], dt));
 
-    std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3>,4>> kContstants(kVel, kPos);
+    // Build the tuple for the kConstants
+    std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3>,4>> kConstants(kVel, kPos);
 
-    return kContstants;
+    return kConstants;
+}
+
+// Function that updates the velocity and position of an object according the RungeKutta aproximation
+void massObject::posVelUpdate(const std::array<std::array<double, 3>,4>& kVel, const std::array<std::array<double, 3>,4>& kPos, int dt){
+
+    // Intialize variables
+    std::array<double, 3> dV;
+    std::array<double, 3> dP;
+
+    // Calculate change in velocity and position
+    dV = arrayScale(addArray(addArray(kVel[0], arrayScale(kVel[1], 2)), addArray(arrayScale(kVel[2], 2), kVel[3])), (dt / 6));
+    dP = arrayScale(addArray(addArray(kPos[0], arrayScale(kPos[1], 2)), addArray(arrayScale(kPos[2], 2), kPos[3])), (dt / 6));
+
+    // Update position and velocity
+    position = addArray(position, dP);
+    velocity = addArray(velocity, dV);
 }
 
 // Checks if offset for acceleration is set to zero
