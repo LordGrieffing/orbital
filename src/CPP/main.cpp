@@ -1,0 +1,75 @@
+#include <array>
+#include <vector>
+#include <cmath>
+#include <tuple>
+#include <iostream>
+#include "massObject.h"
+
+
+void main(){
+
+    // Declare state/universal variables
+    int dt = 1;
+    int simSteps = 1000;
+
+    // Declare mass objects
+    double eM = 5.97219 * pow(10, 24);
+    std::array<double, 3> ePos = {0,0,0};
+    std::array<double, 3> eVel = {0,0,0};
+    double eRadius = 6377993.2066;
+
+    double sM = 10;
+    std::array<double, 3> sPos = {2000000 + eRadius,0,0};
+    std::array<double, 3> sVel = {0,7210,0};
+    double sRadius = 5;
+
+    massObject earth(eM, ePos, eVel, eRadius);
+    massObject satellite(sM, sPos, sVel, sRadius);
+
+    // Declare storage variables
+    std::vector<std::array<double,3>> earthPath;
+    std::vector<std::array<double,3>> satePath;
+
+    // Declare RungeKutta constant arrays
+    std::array<std::array<double, 3>,4> earthKVel;
+    std::array<std::array<double, 3>,4> sateKVel;
+
+    std::array<std::array<double, 3>,4> earthKPos;
+    std::array<std::array<double, 3>,4> sateKPos;
+
+    // Objects vector
+    std::vector<massObject> objects = {earth, satellite};
+
+
+    // Calcualte positions
+    for(int i = 0; i < simSteps; i++){
+
+        //record current position
+        earthPath.push_back(earth.position);
+        satePath.push_back(satellite.position);
+
+        //
+    }
+    
+
+    // Print positions
+}
+
+
+
+
+
+
+
+
+
+# Mass of the Earth
+    mE = 5.97219 * 10**24
+    # Mass of the Sattelite
+    mS = 10
+    # Distance from the core of the earth to its surface
+    coreDist = 6377992.206
+    # Distance from surface to orbit
+    surfaceDist = 2000000
+    # Satelitte radius
+    satRad = 5
