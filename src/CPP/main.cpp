@@ -6,11 +6,11 @@
 #include "massObject.h"
 
 
-void main(){
+int main(){
 
     // Declare state/universal variables
-    int dt = 1;
-    int simSteps = 1000;
+    int dt = 30;
+    int simSteps = 2000;
 
     // Declare mass objects
     double eM = 5.97219 * pow(10, 24);
@@ -38,38 +38,34 @@ void main(){
     std::array<std::array<double, 3>,4> sateKPos;
 
     // Objects vector
-    std::vector<massObject> objects = {earth, satellite};
+    std::vector<massObject*> objects = {&earth, &satellite};
 
 
-    // Calcualte positions
+    // Calculate positions
     for(int i = 0; i < simSteps; i++){
 
-        //record current position
+        // record current position
         earthPath.push_back(earth.position);
         satePath.push_back(satellite.position);
 
-        //
+        // Get the K constants for this step
+        std::tie(earthKVel, earthKPos) = earth.kUpdate(objects, dt);
+        std::tie(sateKVel, sateKPos) = satellite.kUpdate(objects, dt);
+
+        // Update positions and velocities of the objects
+        earth.posVelUpdate(earthKVel, earthKPos, dt);
+        satellite.posVelUpdate(sateKVel, sateKPos, dt);
     }
     
 
     // Print positions
+    for(int i = 0; i < satePath.size(); i++){
+        std::cout << "Step " << i << ": (" 
+                  << satePath[i][0] << ", "
+                  << satePath[i][1] << ", "
+                  << satePath[i][2] << ") " << std::endl;
+    }
+
+
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-# Mass of the Earth
-    mE = 5.97219 * 10**24
-    # Mass of the Sattelite
-    mS = 10
-    # Distance from the core of the earth to its surface
-    coreDist = 6377992.206
-    # Distance from surface to orbit
-    surfaceDist = 2000000
-    # Satelitte radius
-    satRad = 5

@@ -76,14 +76,18 @@ std::tuple<std::array<std::array<double, 3>, 4>, std::array<std::array<double, 3
     // k1
     kVel[0] = accelerate(objects);
     kPos[0] = velocity;
+    //std::cout << kPos[0][0] << " " << kPos[0][1] << " "<< kPos[0][2] << " "<< std::endl;
+    //std::cout << kVel[0][0] << " " << kVel[0][1] << " "<< kVel[0][2] << " "<< std::endl;
 
     // k2
     kVel[1] = accelerate(objects, arrayScale(kPos[0], (0.5 * dt)));
     kPos[1] = addArray(velocity, arrayScale(kVel[0], (0.5*dt)));
+    //std::cout << kVel[1][0] << " " << kVel[1][1] << " "<< kVel[1][2] << " "<< std::endl;
 
     // k3 
     kVel[2] = accelerate(objects, arrayScale(kPos[1], (0.5 * dt)));
     kPos[2] = addArray(velocity, arrayScale(kVel[1], (0.5*dt)));
+    //std::cout << kVel[2][0] << " " << kVel[2][1] << " "<< kVel[2][2] << " "<< std::endl;
 
     // k4
     kVel[3] = accelerate(objects, arrayScale(kPos[2], dt));
@@ -103,10 +107,8 @@ void massObject::posVelUpdate(const std::array<std::array<double, 3>,4>& kVel, c
     std::array<double, 3> dP;
 
     // Calculate change in velocity and position
-    dV = arrayScale(addArray(addArray(kVel[0], arrayScale(kVel[1], 2)), addArray(arrayScale(kVel[2], 2), kVel[3])), (dt / 6));
-    dP = arrayScale(addArray(addArray(kPos[0], arrayScale(kPos[1], 2)), addArray(arrayScale(kPos[2], 2), kPos[3])), (dt / 6));
-
-    std::cout << velocity[0] << " " << velocity[1] << " " << velocity[2] << std::endl;
+    dV = arrayScale(addArray(addArray(kVel[0], arrayScale(kVel[1], 2)), addArray(arrayScale(kVel[2], 2), kVel[3])), (dt / 6.0));
+    dP = arrayScale(addArray(addArray(kPos[0], arrayScale(kPos[1], 2)), addArray(arrayScale(kPos[2], 2), kPos[3])), (dt / 6.0));
 
     // Update position and velocity
     position = addArray(position, dP);
