@@ -3,13 +3,14 @@
 #include <cmath>
 #include <tuple>
 #include "massObject.h"
+#include <iostream>
 
 // Constructor
 massObject::massObject(double m, const std::array<double, 3>& p, const std::array<double, 3>& v, double r)
     : mass(m), position(p), velocity(v), objectRadius(r){};
 
 // Function in charge of calculating acceleration done to an object
-std::array<double, 3> massObject::accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset, bool RK = false){
+std::array<double, 3> massObject::accelerate(const std::vector<massObject*> objects, const std::array<double, 3>& offset, bool RK){
     
     // Declare temp variables that function uses
     std::array<double, 3> temp_pos = position;
@@ -104,6 +105,8 @@ void massObject::posVelUpdate(const std::array<std::array<double, 3>,4>& kVel, c
     // Calculate change in velocity and position
     dV = arrayScale(addArray(addArray(kVel[0], arrayScale(kVel[1], 2)), addArray(arrayScale(kVel[2], 2), kVel[3])), (dt / 6));
     dP = arrayScale(addArray(addArray(kPos[0], arrayScale(kPos[1], 2)), addArray(arrayScale(kPos[2], 2), kPos[3])), (dt / 6));
+
+    std::cout << velocity[0] << " " << velocity[1] << " " << velocity[2] << std::endl;
 
     // Update position and velocity
     position = addArray(position, dP);
