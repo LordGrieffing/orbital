@@ -5,6 +5,7 @@ import numpy as np
 import bodies as body
 import random as rd
 import threading
+import concurrent.futures
 
 def main():
     # mass Scale factor
@@ -62,10 +63,15 @@ def main():
     dt = 1
 
     # Create threads
-    t1 = threading.Thread()
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=3)
+
 
 
     for i in range(num_steps):
+
+        # Create threads
+        t1 = threading.Thread(target=object1.posVelUpdate, args=(object1KVel, object1KPos, dt))
+        
         
         # Record current position
         object1Path.append(object1.position)
@@ -81,9 +87,13 @@ def main():
 
 
         # Update position and velocity of objects
-        object1.posVelUpdate(object1KVel, object1KPos, dt)
-        object2.posVelUpdate(object2KVel, object2KPos, dt)
-        object3.posVelUpdate(object3KVel, object3KPos, dt)
+        pool.submit(object1.posVelUpdate, object1KVel, object1KPos, dt)
+        pool.submit(object3.posVelUpdate, object2KVel, object2KPos, dt)
+        pool.submit(object3.posVelUpdate, object3KVel, object3KPos, dt)
+
+
+    # Shutdown threads
+    pool.shutdown(wait=True)
 
     # Convert lists to arrays for plotting
     object1Path = np.array(object1Path)
