@@ -9,7 +9,7 @@ import concurrent.futures
 
 def main():
     # mass Scale factor
-    massS = 11
+    massS = 10
 
     # Mass of objects
     m1 = 1* 10**massS
@@ -28,9 +28,9 @@ def main():
     pos3 = np.array([0, 0, 0], dtype=np.float64)
 
     # start velocitys
-    vel1 = np.array([0.2554309326049807, 0.516385834327506, 0], dtype=np.float64) * -1
-    vel2 = np.array([0.2554309326049807, 0.516385834327506, 0], dtype=np.float64) * 1
-    vel3 = np.array([0.2554309326049807, 0.516385834327506, 0], dtype=np.float64) * 1
+    vel1 = np.array([0.4, 0, 0], dtype=np.float64)
+    vel2 = np.array([0, 0.4, 0], dtype=np.float64)
+    vel3 = np.array([0, 0, 0.4], dtype=np.float64)
 
 
 
@@ -87,9 +87,15 @@ def main():
 
 
         # Update position and velocity of objects
-        pool.submit(object1.posVelUpdate, object1KVel, object1KPos, dt)
-        pool.submit(object3.posVelUpdate, object2KVel, object2KPos, dt)
-        pool.submit(object3.posVelUpdate, object3KVel, object3KPos, dt)
+        futures = [
+            pool.submit(object1.posVelUpdate, object1KVel, object1KPos, dt),
+            pool.submit(object2.posVelUpdate, object2KVel, object2KPos, dt),
+            pool.submit(object3.posVelUpdate, object3KVel, object3KPos, dt)
+        ]
+
+        # Wait for threads to finish
+        for f in futures:
+            f.result()
 
 
     # Shutdown threads
