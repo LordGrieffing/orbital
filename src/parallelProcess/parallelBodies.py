@@ -82,16 +82,16 @@ class massObject:
 
         total_acc = np.array([0.0,0.0,0.0], dtype=np.float64)
 
-        for other in objectsInfo:
-            if other[0] != temp_pos:
-                r_vec = self.position - other[0]
+        for pos, vel, mass in objectsInfo:
+            if not self.samePosition(temp_pos, pos):
+                r_vec = self.position - pos
                 r_mag = np.linalg.norm(r_vec)
 
                 if r_mag == 0:
                     continue
 
                 unitV = r_vec / r_mag
-                a = -(self.G * other[1]) / (r_mag**2)
+                a = -(self.G * mass) / (r_mag**2)
 
                 total_acc += a * unitV
 
@@ -139,3 +139,11 @@ class massObject:
 
         # update velocity
         self.setVelocity(self.velocity + dV)
+
+    # Checks if two positions are the same position
+    def samePosition(self, pos1, pos2):
+        for i in range(len(pos1)):
+            if pos1[i] != pos2[i]:
+                return False
+            
+        return True
